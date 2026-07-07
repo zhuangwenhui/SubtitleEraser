@@ -17,7 +17,8 @@ import numpy as np
 from . import probe
 from .backends import get_backend
 from .detect import make_detector
-from .events import aggregate, build_mask, expand_bbox, feather_paste
+from .events import (aggregate, build_mask, expand_bbox, feather_paste,
+                     stroke_mask_in_box)
 from .ffmpeg_tools import ffmpeg_bin, run as ffrun
 from .mux import FrameSink
 from .report import Report
@@ -102,7 +103,7 @@ def run(cfg: Config) -> Report:
                        e.bbox[2] - x1, e.bbox[3] - y1)
         mask = build_mask((roi[3] - roi[1], roi[2] - roi[0]), bbox_in_roi)
         ev_ctx.append({"ev": e, "roi": roi, "mask": mask,
-                       "buf": [], "buf_idx": []})
+                       "bbox_in_roi": bbox_in_roi, "buf": [], "buf_idx": []})
 
     covered: dict[int, int] = defaultdict(int)   # 帧号 → 尚未完成修复的事件数
     for c in ev_ctx:
@@ -117,9 +118,13 @@ def run(cfg: Config) -> Report:
     def flush(c: dict) -> None:
         if not c["buf"]:
             return
-        repaired = backend.erase_segment(c["buf"], [c["mask"]] * len(c["buf"]))
-        for fi, patch in zip(c["buf_idx"], repaired):
-            feather_paste(pending[fi], c["roi"], patch, c["mask"])
+        # 逐帧在检测框内提字幕**笔画**掩码(而非整框),擦除只填笔画邻域,避免糊整块;
+        # 某帧框内提不到亮文字则回退整框掩码,保证不漏擦。
+        smasks = [stroke_mask_in_box(f, c["bbox_in_roi"]) for f in c["buf"]]
+        smasks = [sm if int((sm > 127).sum()) >= 20 else c["mask"] for sm in smasks]
+        repaired = backend.erase_segment(c["buf"], smasks)
+        for fi, patch, sm in zip(c["buf_idx"], repaired, smasks):
+            feather_paste(pending[fi], c["roi"], patch, sm)
             covered[fi] -= 1
         c["buf"], c["buf_idx"] = [], []
 

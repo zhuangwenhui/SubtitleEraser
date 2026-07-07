@@ -7,6 +7,8 @@
 
 ![字幕去除效果示例](docs/effect_demo.png)
 
+> 以上均为**交付代码的实际端到端输出**(检测用 PP-OCRv5:`--detector paddle`),照下方命令即可复现。
+
 ## 本地方案 vs 商用云服务
 
 ![本地方案与商用云对比](docs/local_vs_cloud.png)
@@ -23,10 +25,13 @@
 
 ```bash
 pip install -r requirements.txt
-python -m subtitle_eraser --input in.mp4 --output out.mp4
+# 推荐:PP-OCRv5 字幕检测(即上方效果),需额外安装:
+pip install paddlepaddle paddleocr
+python -m subtitle_eraser --input in.mp4 --output out.mp4 --detector paddle
 ```
 
-默认 `--detector fixed --region bottom:0.35 --backend flow-copy`。
+- `--detector paddle`:用 PP-OCRv5 精确定位字幕,效果如上方效果图(推荐)。
+- `--detector fixed`(默认):零依赖快速模式(仅 numpy + opencv),对固定底部字幕可用但较粗。
 
 ## 文档
 

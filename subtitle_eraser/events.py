@@ -113,6 +113,29 @@ def build_mask(roi_shape_hw: tuple[int, int], bbox_in_roi: tuple[int, int, int, 
     return cv2.dilate(mask, kernel)
 
 
+def stroke_mask_in_box(frame_bgr: np.ndarray, bbox: tuple[int, int, int, int],
+                       min_thresh: int = 165, k: int = 9) -> np.ndarray:
+    """在检测框内提取字幕**笔画**掩码(而非整框):框内亮像素阈值 → 闭运算连通 →
+    膨胀盖住描边/抗锯齿。擦除只填笔画邻域,面积远小于整框,避免把框内背景一起糊掉。
+    亮文字(白字/描边字)适用;框内无亮文字时返回空掩码(该帧不改动)。"""
+    h, w = frame_bgr.shape[:2]
+    x1, y1, x2, y2 = bbox
+    x1, y1, x2, y2 = max(0, x1), max(0, y1), min(w, x2), min(h, y2)
+    m = np.zeros((h, w), dtype=np.uint8)
+    if x2 - x1 < 3 or y2 - y1 < 3:
+        return m
+    roi = frame_bgr[y1:y2, x1:x2]
+    g = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY) if roi.ndim == 3 else roi
+    th = max(min_thresh, int(g.mean() + 0.8 * g.std()))
+    s = (g > th).astype(np.uint8) * 255
+    rect = cv2.getStructuringElement(cv2.MORPH_RECT, (k, k))
+    ell = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
+    s = cv2.morphologyEx(s, cv2.MORPH_CLOSE, rect)
+    s = cv2.dilate(s, ell, iterations=2)
+    m[y1:y2, x1:x2] = s
+    return m
+
+
 def feather_paste(frame: np.ndarray, roi: tuple[int, int, int, int],
                   repaired_roi: np.ndarray, mask_roi: np.ndarray,
                   feather_px: int = 5) -> None:
