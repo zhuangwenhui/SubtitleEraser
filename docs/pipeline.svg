@@ -1,0 +1,123 @@
+<svg viewBox="0 0 1180 520" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans CJK SC','PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+    <marker id="ahA" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#d97706"/>
+    </marker>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#e6f6ea"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="2" y="2" width="1176" height="516" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="40" y="46" font-size="22" font-weight="700" fill="#0f172a">视频硬字幕去除 · 处理管线</text>
+  <text x="40" y="70" font-size="13" fill="#64748b">固定处理骨架 + 可插拔擦除后端　·　输入带硬字幕视频 → 输出去字幕视频 + 处理报告 JSON</text>
+
+  <!-- ===== 主流程 ===== -->
+  <!-- 输入 -->
+  <rect x="24" y="150" width="96" height="74" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.6"/>
+  <text x="72" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0c4a6e">输入</text>
+  <text x="72" y="202" text-anchor="middle" font-size="11" fill="#0369a1">带字幕视频</text>
+
+  <!-- 阶段盒(通用样式:淡蓝灰) -->
+  <!-- 0 -->
+  <rect x="136" y="150" width="116" height="74" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4"/>
+  <text x="194" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">0 软字幕检查</text>
+  <text x="194" y="202" text-anchor="middle" font-size="11" fill="#64748b">ffprobe 探测</text>
+  <!-- 1 -->
+  <rect x="266" y="150" width="116" height="74" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4"/>
+  <text x="324" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">1 字幕定位</text>
+  <text x="324" y="202" text-anchor="middle" font-size="11" fill="#64748b">稀疏采样 2fps</text>
+  <!-- 2 -->
+  <rect x="396" y="150" width="116" height="74" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4"/>
+  <text x="454" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">2 事件聚合</text>
+  <text x="454" y="202" text-anchor="middle" font-size="11" fill="#64748b">IoU 关联·稳定盒</text>
+  <!-- 3 -->
+  <rect x="526" y="150" width="116" height="74" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4"/>
+  <text x="584" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">3 掩码 + ROI</text>
+  <text x="584" y="202" text-anchor="middle" font-size="11" fill="#64748b">膨胀·留余量</text>
+  <!-- 4 可插拔后端 -->
+  <rect x="656" y="150" width="116" height="74" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.8" stroke-dasharray="6 4"/>
+  <text x="714" y="180" text-anchor="middle" font-size="14" font-weight="700" fill="#5b21b6">4 擦除后端</text>
+  <text x="714" y="199" text-anchor="middle" font-size="10.5" fill="#7c3aed">⇄ 可插拔</text>
+  <text x="714" y="214" text-anchor="middle" font-size="9.5" fill="#7c3aed">flow-copy / opencv</text>
+  <!-- 5 -->
+  <rect x="786" y="150" width="116" height="74" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4"/>
+  <text x="844" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">5 羽化回贴</text>
+  <text x="844" y="202" text-anchor="middle" font-size="11" fill="#64748b">仅掩码区改动</text>
+  <!-- 6 -->
+  <rect x="916" y="150" width="116" height="74" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4"/>
+  <text x="974" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">6 合流编码</text>
+  <text x="974" y="202" text-anchor="middle" font-size="11" fill="#64748b">音轨流复制</text>
+  <!-- 输出 -->
+  <rect x="1050" y="150" width="104" height="74" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/>
+  <text x="1102" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">输出</text>
+  <text x="1102" y="202" text-anchor="middle" font-size="11" fill="#15803d">去字幕视频</text>
+
+  <!-- 主流程箭头 -->
+  <g stroke="#94a3b8" stroke-width="1.8" fill="none">
+    <line x1="120" y1="187" x2="133" y2="187" marker-end="url(#ah)"/>
+    <line x1="252" y1="187" x2="263" y2="187" marker-end="url(#ah)"/>
+    <line x1="382" y1="187" x2="393" y2="187" marker-end="url(#ah)"/>
+    <line x1="512" y1="187" x2="523" y2="187" marker-end="url(#ah)"/>
+    <line x1="642" y1="187" x2="653" y2="187" marker-end="url(#ah)"/>
+    <line x1="772" y1="187" x2="783" y2="187" marker-end="url(#ah)"/>
+    <line x1="902" y1="187" x2="913" y2="187" marker-end="url(#ah)"/>
+    <line x1="1032" y1="187" x2="1047" y2="187" marker-end="url(#ah)"/>
+  </g>
+
+  <!-- ===== 捷径分支 + 报告 ===== -->
+  <!-- 捷径①:软字幕 -->
+  <line x1="194" y1="224" x2="194" y2="250" stroke="#d97706" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ahA)"/>
+  <rect x="90" y="252" width="252" height="42" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.3"/>
+  <text x="216" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#92400e">捷径①　含软字幕流</text>
+  <text x="216" y="286" text-anchor="middle" font-size="11" fill="#b45309">→ 剥轨直接输出(零画质损失)</text>
+  <!-- 捷径②:无事件 -->
+  <line x1="454" y1="224" x2="454" y2="250" stroke="#d97706" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ahA)"/>
+  <rect x="372" y="252" width="242" height="42" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.3"/>
+  <text x="493" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#92400e">捷径②　无字幕事件</text>
+  <text x="493" y="286" text-anchor="middle" font-size="11" fill="#b45309">→ 流复制直接输出</text>
+  <!-- 报告 -->
+  <line x1="974" y1="224" x2="974" y2="250" stroke="#cbd5e1" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <rect x="700" y="252" width="320" height="42" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
+  <text x="860" y="270" text-anchor="middle" font-size="12" font-weight="600" fill="#334155">每次运行输出 处理报告 JSON</text>
+  <text x="860" y="286" text-anchor="middle" font-size="11" fill="#64748b">字幕时间轴 · 各阶段耗时 · 质检结论</text>
+
+  <!-- ===== 掩码与回贴机制 ===== -->
+  <text x="40" y="338" font-size="14" font-weight="700" fill="#0f172a">掩码与回贴机制</text>
+
+  <!-- (a) 带字幕帧 -->
+  <rect x="60" y="352" width="150" height="86" rx="8" fill="url(#sky)" stroke="#94a3b8" stroke-width="1.2"/>
+  <circle cx="176" cy="376" r="12" fill="#fde68a"/>
+  <rect x="70" y="414" width="130" height="16" rx="2" fill="#facc15"/>
+  <text x="135" y="426" text-anchor="middle" font-size="10" font-weight="700" fill="#713f12">字幕文字</text>
+  <text x="135" y="456" text-anchor="middle" font-size="12" fill="#334155">① 输入帧</text>
+
+  <!-- (b) 掩码 -->
+  <rect x="270" y="352" width="150" height="86" rx="8" fill="#0b1220" stroke="#94a3b8" stroke-width="1.2"/>
+  <rect x="280" y="410" width="130" height="22" rx="3" fill="#ffffff"/>
+  <text x="345" y="456" text-anchor="middle" font-size="12" fill="#334155">② 事件掩码(膨胀)</text>
+
+  <!-- (c) 去字幕帧 -->
+  <rect x="480" y="352" width="150" height="86" rx="8" fill="url(#sky)" stroke="#94a3b8" stroke-width="1.2"/>
+  <circle cx="596" cy="376" r="12" fill="#fde68a"/>
+  <text x="555" y="456" text-anchor="middle" font-size="12" fill="#334155">③ 擦除 + 羽化回贴</text>
+
+  <!-- 机制箭头 -->
+  <g stroke="#94a3b8" stroke-width="1.8" fill="none">
+    <line x1="212" y1="395" x2="266" y2="395" marker-end="url(#ah)"/>
+    <line x1="422" y1="395" x2="476" y2="395" marker-end="url(#ah)"/>
+  </g>
+
+  <!-- 机制说明 -->
+  <g font-size="12.5" fill="#334155">
+    <text x="680" y="368">· 检测 → 聚合为字幕事件,得到稳定包围盒与时间轴</text>
+    <text x="680" y="392">· 掩码按字高比例膨胀,覆盖描边 / 抗锯齿边缘</text>
+    <text x="680" y="416">· 仅掩码区(含 ≤5px 羽化带)被修改,其余像素逐像素保留</text>
+    <text x="680" y="440">· 后端可插拔:同一接口切换擦除算法,骨架不变</text>
+  </g>
+
+  <text x="1150" y="504" text-anchor="end" font-size="10.5" fill="#94a3b8">subtitle-eraser v0.1 · 处理管线</text>
+</svg>

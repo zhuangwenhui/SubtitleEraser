@@ -1,0 +1,7 @@
+# 骨架最小依赖
+numpy
+opencv-python-headless
+
+# ---- 可选:PP-OCRv5 文本检测(--detector paddle),按需安装 ----
+# paddlepaddle-gpu
+# paddleocr
