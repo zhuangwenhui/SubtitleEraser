@@ -1,9 +1,9 @@
 """软字幕剥离(处理骨架第 0 步)自测。
 
-说明:按项目约定,自建数据仅允许用于本项(软字幕剥离)测试;
-去除效果评测一律使用开源基准,见路线文档。
+用 ffmpeg 现场生成一段带 / 不带内嵌软字幕的测试视频,验证软字幕检测与剥轨逻辑。
+无需任何外部数据。
 
-用法: .venv/bin/python tests/test_probe_softsub.py
+用法: python tests/test_probe_softsub.py
 """
 from __future__ import annotations
 

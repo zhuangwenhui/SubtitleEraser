@@ -11,6 +11,8 @@ __pycache__/
 /output/
 *.mp4
 !tests/**/*.mp4
+!samples/*.mp4
+samples/erased.mp4
 
 # 密钥 / 大文件 / 本地工作数据 —— 永不入库(防误提交)
 .secrets.env

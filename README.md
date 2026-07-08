@@ -7,7 +7,8 @@
 
 ![字幕去除效果示例](docs/effect_demo.png)
 
-> 以上均为**交付代码的实际端到端输出**(检测用 PP-OCRv5:`--detector paddle`),照下方命令即可复现。
+> 以上为**交付代码在真实素材上的实际端到端输出**(检测用 PP-OCRv5:`--detector paddle`)。
+> 想在本机亲手复现并核对数值,仓库随附一段可一键运行的样例,见 **[samples/](samples/)**。
 
 ## 本地方案 vs 商用云服务
 
@@ -24,14 +25,21 @@
 ## 快速开始
 
 ```bash
-pip install -r requirements.txt
-# 推荐:PP-OCRv5 字幕检测(即上方效果),需额外安装:
+pip install -r requirements.txt        # 骨架:numpy + opencv(另需系统 ffmpeg,见 tools/README.md)
+
+# 用随附样例一键跑通并验证(默认检测器,无需额外依赖):
+python -m subtitle_eraser --input samples/subbed.mp4 --output samples/erased.mp4
+python samples/verify.py samples/erased.mp4        # 打印字幕带 PSNR:处理前≈15 → 处理后≈37 dB
+
+# 处理真实复杂素材时,推荐 PP-OCRv5 精确检测(即上方效果图),需额外安装:
 pip install paddlepaddle paddleocr
 python -m subtitle_eraser --input in.mp4 --output out.mp4 --detector paddle
 ```
 
-- `--detector paddle`:用 PP-OCRv5 精确定位字幕,效果如上方效果图(推荐)。
-- `--detector fixed`(默认):零依赖快速模式(仅 numpy + opencv),对固定底部字幕可用但较粗。
+- `--detector paddle`:用 PP-OCRv5 精确定位字幕,效果如上方效果图(复杂素材推荐)。
+- `--detector fixed`(默认):零额外依赖(仅 numpy + opencv),把画面底部固定条带当字幕区,对固定底部字幕即可(随附样例即用此模式)。
+
+复现与验证的完整说明见 **[samples/](samples/)**。
 
 ## 文档
 
