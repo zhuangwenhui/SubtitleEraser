@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import subprocess
+from pathlib import Path
 
 import numpy as np
 
@@ -17,6 +18,7 @@ class FrameSink:
 
     def __init__(self, dst: str, src_for_audio: str, width: int, height: int,
                  fps: float, has_audio: bool, crf: int = 18):
+        Path(dst).parent.mkdir(parents=True, exist_ok=True)  # 输出目录不存在则建
         cmd = [ffmpeg_bin(), "-y",
                "-f", "rawvideo", "-pix_fmt", "bgr24",
                "-s", f"{width}x{height}", "-r", f"{fps:.6f}", "-i", "pipe:0"]

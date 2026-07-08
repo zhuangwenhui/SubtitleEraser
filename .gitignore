@@ -14,6 +14,10 @@ __pycache__/
 !samples/*.mp4
 samples/erased.mp4
 
+# 测试用例素材另行分发,放入 testcases/ 后不入库
+testcases/*
+!testcases/README.md
+
 # 密钥 / 大文件 / 本地工作数据 —— 永不入库(防误提交)
 .secrets.env
 *.secret

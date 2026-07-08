@@ -41,6 +41,8 @@ def run(cfg: Config) -> Report:
     rep = Report(asdict(cfg))
     rep_path = cfg.report_path or str(Path(cfg.output).with_suffix("")) + ".report.json"
     src = str(cfg.input)
+    for p in (cfg.output, rep_path):        # 输出/报告目录不存在则建
+        Path(p).parent.mkdir(parents=True, exist_ok=True)
 
     # ---- 第 0 步:软字幕检查 ----
     info = probe.analyze(src)

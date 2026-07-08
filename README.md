@@ -8,7 +8,8 @@
 ![字幕去除效果示例](docs/effect_demo.png)
 
 > 以上为**交付代码在真实素材上的实际端到端输出**(检测用 PP-OCRv5:`--detector paddle`)。
-> 想在本机亲手复现并核对数值,仓库随附一段可一键运行的样例,见 **[samples/](samples/)**。
+> 复现方式有二:效果图所用测试用例以压缩包**另行分发**,收到后放入 **[testcases/](testcases/)** 按说明运行,即可得到上图各行结果;
+> 仓库也随附一段可一键运行的合成样例(含量化验证),见 **[samples/](samples/)**。
 
 ## 本地方案 vs 商用云服务
 
@@ -39,7 +40,7 @@ python -m subtitle_eraser --input in.mp4 --output out.mp4 --detector paddle
 - `--detector paddle`:用 PP-OCRv5 精确定位字幕,效果如上方效果图(复杂素材推荐)。
 - `--detector fixed`(默认):零额外依赖(仅 numpy + opencv),把画面底部固定条带当字幕区,对固定底部字幕即可(随附样例即用此模式)。
 
-复现与验证的完整说明见 **[samples/](samples/)**。
+复现与验证的完整说明:合成样例见 **[samples/](samples/)**;另行分发的真实素材用例见 **[testcases/](testcases/)**。
 
 ## 文档
 
